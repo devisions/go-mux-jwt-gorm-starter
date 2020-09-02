@@ -25,6 +25,7 @@ func VerifyToken(tokenString string) (jwt.Claims, error) {
 	return token.Claims, nil
 }
 
+// generateJWT generates a signed JWT with user details as claims.
 func generateJWT(user domain.User) (JWTToken, error) {
 	signingKey := []byte(os.Getenv(config.JwtSignKey))
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{

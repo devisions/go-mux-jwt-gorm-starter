@@ -24,7 +24,7 @@ func InitErrors() Errors {
 		UnauthorizedError:  {"E002", "Unauthorized access."},
 		JWTValidationError: {"E003", "JWT validation error."},
 	}
-	return Errors{catalog: catalog}
+	return Errors{catalog}
 }
 
 const (
