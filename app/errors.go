@@ -5,20 +5,30 @@ type Error struct {
 	Message string
 }
 
+type ErrorType string
+
 type Errors struct {
-	catalog map[string]Error
+	catalog map[ErrorType]Error
 }
 
-func (errs *Errors) Get(errorCode string) Error {
-	return errs.catalog[errorCode]
+// AppErrors is a catalog of application wide errors.
+var errors Errors = InitErrors()
+
+func GetError(errorType ErrorType) Error {
+	return errors.catalog[errorType]
 }
 
 func InitErrors() Errors {
-	catalog := map[string]Error{
-		"E001": {
-			Code:    "E001",
-			Message: "An internal error occurred.",
-		},
+	catalog := map[ErrorType]Error{
+		InternalError:      {"E001", "An internal error occurred."},
+		UnauthorizedError:  {"E002", "Unauthorized access."},
+		JWTValidationError: {"E003", "JWT validation error."},
 	}
 	return Errors{catalog: catalog}
 }
+
+const (
+	InternalError      ErrorType = "InternalError"
+	UnauthorizedError  ErrorType = "UnauthorizedError"
+	JWTValidationError ErrorType = "JWTValidationError"
+)

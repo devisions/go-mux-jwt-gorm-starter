@@ -1,15 +1,13 @@
-package http
+package routes
 
 import "net/http"
 
-var AppRoutes []RouteSet
-
-type RouteSet struct {
+type ApiRestRouteSet struct {
 	Prefix    string
-	SubRoutes []AppRoute
+	SubRoutes []ApiRestRoute
 }
 
-type AppRoute struct {
+type ApiRestRoute struct {
 	Name        string
 	Method      string
 	Pattern     string
