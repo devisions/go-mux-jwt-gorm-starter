@@ -1,4 +1,4 @@
-## Starter Project on Go using Mux, JWT, and GORM
+## Starter Project for Go using Mux, JWT, and GORM
 
 This is a starter project for a GoLang implementation of an HTTP (such as RESTful) API using:
 
@@ -10,5 +10,10 @@ This is a starter project for a GoLang implementation of an HTTP (such as RESTfu
 
 In terms of prerequisites:
 
-- The dependencies are managed by Go Modules, so this is taken care implicitly (no manual action req'd)
+- The dependencies are managed by Go Modules, so this is taken care implicitly (no manual action required)
 - For restarting on changes (the process is restarted, we don't aim for "live reloading" now), [air](https://github.com/cosmtrek/air) utility is used in the run script. Just install this tool using `go get -u github.com/cosmtrek/air`.
+
+### Run
+
+TODO: add `air` setup
+For now, the classic way `go run cmd/server.go` does the job.
