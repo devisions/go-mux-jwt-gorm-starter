@@ -57,14 +57,14 @@ var UsersApiRestRoutes = routes.ApiRestRouteSet{
 
 func ShowAllHandler(w http.ResponseWriter, r *http.Request) {
 	var users []domain.User
-	// repo.Find(&users)
+	// TODO repo.Find(&users)
 	responses.RespondAsJson(w, users)
 }
 
 func ShowOneHandler(w http.ResponseWriter, r *http.Request) {
 	//params := mux.Vars(r)
 	var user domain.User
-	// repo.Find(&user, params["id"]
+	// TODO repo.Find(&user, params["id"]
 	responses.RespondAsJson(w, user)
 }
 
