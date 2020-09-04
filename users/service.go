@@ -2,28 +2,29 @@ package users
 
 // UserService
 type UserService interface {
-
-	// embedded
-	UserStore
-
 	Authenticate(email, password string) (*User, error)
+	Uninit()
 }
 
 func NewUserService(dbConnInfo string) (UserService, error) {
-	us, err := newUserStoreGorm(dbConnInfo)
+	userStore, err := newUserStoreGorm(dbConnInfo)
 	if err != nil {
 		return nil, err
 	}
 	return &userService{
-		UserStore: us,
+		userStore,
 	}, nil
 }
 
 // Implementation of the UserService.
 type userService struct {
-	UserStore
+	userStore UserStore
 }
 
 func (us *userService) Authenticate(email, password string) (*User, error) {
 	return nil, nil
+}
+
+func (us *userService) Uninit() {
+	// TODO
 }

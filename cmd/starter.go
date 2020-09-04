@@ -29,7 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to init the user service: %v", err)
 	}
-	defer userSvc.Close()
+	defer userSvc.Uninit()
 
 	port, isSet := os.LookupEnv("PORT")
 	if !isSet {
