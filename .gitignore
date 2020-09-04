@@ -20,3 +20,6 @@
 ## Location where PostgreSQL container stores the data.
 ## This is used during development.
 .pgdata
+
+## the air's working dir
+.air
