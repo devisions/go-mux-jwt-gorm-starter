@@ -2,7 +2,7 @@ package rest
 
 import (
 	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/config"
-	"github.com/devisions/go-mux-jwt-gorm-starter/user/domain"
+	"github.com/devisions/go-mux-jwt-gorm-starter/users"
 	"github.com/dgrijalva/jwt-go"
 	"os"
 	"time"
@@ -26,7 +26,7 @@ func VerifyToken(tokenString string) (jwt.Claims, error) {
 }
 
 // generateJWT generates a signed JWT with user details as claims.
-func generateJWT(user domain.User) (JWTToken, error) {
+func generateJWT(user users.User) (JWTToken, error) {
 	signingKey := []byte(os.Getenv(config.JwtSignKey))
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"exp":     time.Now().Add(1 * time.Hour).Unix(),

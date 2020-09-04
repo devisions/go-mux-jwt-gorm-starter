@@ -1,9 +1,8 @@
-package api
+package users
 
 import (
 	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/responses"
 	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/routes"
-	"github.com/devisions/go-mux-jwt-gorm-starter/user/domain"
 	"net/http"
 )
 
@@ -56,20 +55,20 @@ var UsersApiRestRoutes = routes.ApiRestRouteSet{
 }
 
 func ShowAllHandler(w http.ResponseWriter, r *http.Request) {
-	var users []domain.User
+	var users []User
 	// TODO repo.Find(&users)
 	responses.RespondAsJson(w, users)
 }
 
 func ShowOneHandler(w http.ResponseWriter, r *http.Request) {
 	//params := mux.Vars(r)
-	var user domain.User
+	var user User
 	// TODO repo.Find(&user, params["id"]
 	responses.RespondAsJson(w, user)
 }
 
 func CreateHandler(w http.ResponseWriter, r *http.Request) {
-	var user domain.User
+	var user User
 	user.Email = r.FormValue("email")
 	user.Name = r.FormValue("name")
 	user.Hash = user.HashPassword(r.FormValue("password"))

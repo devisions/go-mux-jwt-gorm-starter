@@ -2,7 +2,7 @@ package rest
 
 import (
 	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/routes"
-	"github.com/devisions/go-mux-jwt-gorm-starter/user/api"
+	"github.com/devisions/go-mux-jwt-gorm-starter/users"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -14,7 +14,7 @@ func NewApiRestRouter() *mux.Router {
 
 	// setup the routes
 	var ApiRestRoutes []routes.ApiRestRouteSet
-	ApiRestRoutes = append(ApiRestRoutes, api.UsersApiRestRoutes)
+	ApiRestRoutes = append(ApiRestRoutes, users.UsersApiRestRoutes)
 
 	for _, route := range ApiRestRoutes {
 		subRouter := router.PathPrefix(route.Prefix).Subrouter()

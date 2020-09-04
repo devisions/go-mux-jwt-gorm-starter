@@ -1,0 +1,14 @@
+version: "3"
+services:
+  db:
+    image: "postgres:11"
+    container_name: "go-mux-jwt-gorm-starter"
+    environment:
+      POSTGRES_USER: starter
+      POSTGRES_PASSWORD: starter
+      POSTGRES_DB: go-mux-jwt-gorm-starter
+      PGDATA: /pgdata
+    ports:
+      - "54325:5432"
+    volumes:
+      - .pgdata:/pgdata

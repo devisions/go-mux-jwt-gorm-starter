@@ -1,7 +1,8 @@
-package store
+package users
 
 import (
-	"github.com/devisions/go-mux-jwt-gorm-starter/user/domain"
+	"log"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -13,12 +14,12 @@ import (
 // or an error that is either defined by the `models` package (such as `ErrNotFound`)
 // or another, more low level error.
 type UserStore interface {
-	GetByID(int uint) (*domain.User, error)
-	GetByEmail(email string) (*domain.User, error)
+	GetByID(int uint) (*User, error)
+	GetByEmail(email string) (*User, error)
 
-	Create(user *domain.User) error
-	Update(user *domain.User) error
-	Delete(id uint) error
+	// Create(user *User) error
+	// Update(user *User) error
+	// Delete(id uint) error
 
 	// Close is used for closing the connection(s) to the store (database).
 	Close()
@@ -33,12 +34,10 @@ type userStoreGorm struct {
 }
 
 // Internal constructor of a userStoreGorm instance.
-func newUserStoreGorm(connectionInfo string) (*userStoreGorm, error) {
+func newUserStoreGorm(dbConnInfo string) (*userStoreGorm, error) {
 
-	// TODO: have dsn params in external config
-	dsn := "user=postgres password=postgres DB.name=starter port=54325 sslmode=disable"
 	cfg := postgres.Config{
-		DSN:                  dsn,
+		DSN:                  dbConnInfo,
 		PreferSimpleProtocol: true,
 	}
 	db, err := gorm.Open(postgres.New(cfg), &gorm.Config{})
@@ -46,5 +45,22 @@ func newUserStoreGorm(connectionInfo string) (*userStoreGorm, error) {
 		return nil, err
 	}
 	db.Logger = db.Logger.LogMode(logger.Info)
-	return &userStoreGorm{db: db}, nil
+	log.Println("Connected to database.")
+	return &userStoreGorm{db}, nil
+}
+
+func (us *userStoreGorm) GetByID(int uint) (*User, error) {
+	return nil, nil
+}
+
+func (us *userStoreGorm) GetByEmail(email string) (*User, error) {
+	return nil, nil
+}
+
+func (us *userStoreGorm) Close() {
+
+}
+
+func (us *userStoreGorm) AutoMigrate() error {
+	return nil
 }

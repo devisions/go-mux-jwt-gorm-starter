@@ -16,3 +16,7 @@
 
 .idea
 *.iml
+
+## Location where PostgreSQL container stores the data.
+## This is used during development.
+.pgdata

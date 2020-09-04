@@ -1,13 +1,35 @@
 package main
 
 import (
-	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest"
+	"github.com/devisions/go-mux-jwt-gorm-starter/users"
+)
+
+const (
+	host     = "localhost"
+	port     = 54325
+	user     = "starter"
+	password = "starter"
+	dbname   = "go-mux-jwt-gorm-starter"
 )
 
 func main() {
+
+	// Store init.
+	dbConnInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
+	userSvc, err := users.NewUserService(dbConnInfo)
+	if err != nil {
+		log.Fatalf("Failed to init the user service: %v", err)
+	}
+	defer userSvc.Close()
 
 	port, isSet := os.LookupEnv("PORT")
 	if !isSet {
