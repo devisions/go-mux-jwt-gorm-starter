@@ -50,7 +50,7 @@ func newUserStoreGorm(dbConnInfo string) (*userStoreGorm, error) {
 		return nil, err
 	}
 	db.Logger = db.Logger.LogMode(logger.Info)
-	log.Println("Connected to database.")
+	log.Println("Connected to user store database.")
 	return &userStoreGorm{db}, nil
 }
 

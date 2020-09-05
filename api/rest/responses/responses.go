@@ -9,7 +9,7 @@ import (
 )
 
 type ErrorContent struct {
-	Code    string `json:"code"`
+	Code    string `json:"code,omitempty"`
 	Message string `json:"message,omitempty"`
 	Reason  string `json:"reason,omitempty"`
 }
@@ -39,6 +39,18 @@ func RespondJsonWithUnauthorizedError(w http.ResponseWriter) {
 	RespondJsonWithErrorReason(w, http.StatusUnauthorized, app.ErrUnauthorized, "")
 }
 
+func RespondErrBadRequest(w http.ResponseWriter) {
+	RespondJsonWithErrorReason(w, http.StatusBadRequest, app.ErrEmpty, "")
+}
+
+func RespondJsonWithErrBadRequest(w http.ResponseWriter) {
+	RespondJsonWithErrorReason(w, http.StatusBadRequest, app.ErrBadRequest, "")
+}
+
+func RespondJsonWithErrInternalAndReason(w http.ResponseWriter, reason string) {
+	RespondJsonWithErrorReason(w, http.StatusInternalServerError, app.ErrInternal, reason)
+}
+
 // === Generic responses ===
 
 // RespondJsonWithError responds with the provided statusCode and error in the body.
@@ -51,9 +63,11 @@ func RespondJsonWithError(w http.ResponseWriter, statusCode int, errorType app.E
 func RespondJsonWithErrorReason(w http.ResponseWriter, statusCode int, errorType app.ErrorType, reason string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
-	err := json.NewEncoder(w).Encode(newErrorResponse(errorType, reason))
-	if err != nil {
-		log.Printf("Failed to encode the response: %s\n", err)
+	if errorType != app.ErrEmpty {
+		err := json.NewEncoder(w).Encode(newErrorResponse(errorType, reason))
+		if err != nil {
+			log.Printf("Failed to encode the response: %s\n", err)
+		}
 	}
 }
 

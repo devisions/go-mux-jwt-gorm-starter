@@ -16,6 +16,7 @@ import (
 type UserService interface {
 	Authenticate(email, password string) (*tokens.JWTToken, error)
 	Register(name, email, password string) (*User, error)
+	GetByID(id uint) (*User, error)
 }
 
 func NewUserService(store UserStore) UserService {
@@ -51,6 +52,10 @@ func (us *userService) Register(name, email, password string) (*User, error) {
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (us *userService) GetByID(id uint) (*User, error) {
+	return us.userStore.GetByID(id)
 }
 
 func (us *userService) hashPassword(password string) string {

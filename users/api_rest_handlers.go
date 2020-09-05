@@ -3,9 +3,11 @@ package users
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/responses"
 	"github.com/devisions/go-mux-jwt-gorm-starter/app/helpers"
+	"github.com/gorilla/mux"
 )
 
 // UserService instance used internally (within)
@@ -29,14 +31,22 @@ type LoginForm struct {
 
 func ShowAllHandler(w http.ResponseWriter, r *http.Request) {
 	var users []User
-	// TODO repo.Find(&users)
+	// TODO
 	responses.RespondJson(w, users)
 }
 
 func ShowOneHandler(w http.ResponseWriter, r *http.Request) {
-	//params := mux.Vars(r)
-	var user User
-	// TODO repo.Find(&user, params["id"]
+	params := mux.Vars(r)
+	id, err := strconv.ParseUint(params["id"], 10, 64)
+	if err != nil {
+		responses.RespondErrBadRequest(w)
+		return
+	}
+	user, err := userSvc.GetByID(uint(id))
+	if err != nil {
+		responses.RespondJsonWithErrInternalAndReason(w, err.Error())
+		return
+	}
 	responses.RespondJson(w, user)
 }
 

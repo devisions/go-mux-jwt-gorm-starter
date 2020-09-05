@@ -19,7 +19,7 @@ var ApiRestRouteSet = routes.ApiRestRouteSet{
 		{
 			Name:        "Show One User",
 			Method:      http.MethodGet,
-			Pattern:     "/{userId}",
+			Pattern:     "/{id}",
 			HandlerFunc: ShowOneHandler,
 			Protected:   true,
 		},

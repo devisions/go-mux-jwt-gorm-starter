@@ -18,17 +18,21 @@ func GetError(errorType ErrorType) Error {
 }
 
 var appErrors map[ErrorType]Error = map[ErrorType]Error{
+	ErrEmpty:         {},
 	ErrInternal:      {"E001", "An internal error occurred."},
 	ErrUnauthorized:  {"E002", "Unauthorized access."},
 	ErrJWTValidation: {"E003", "JWT validation error."},
 	ErrNotFound:      {"E004", "Not found."},
 	ErrInvalidCreds:  {"E005", "Invalid credentials."},
+	ErrBadRequest:    {"E006", "Invalid request."},
 }
 
 const (
+	ErrEmpty         ErrorType = "ErrEmpty"
 	ErrInternal      ErrorType = "ErrInternal"
 	ErrUnauthorized  ErrorType = "ErrUnauthorized"
 	ErrJWTValidation ErrorType = "ErrJWTValidation"
 	ErrNotFound      ErrorType = "ErrNotFound"
 	ErrInvalidCreds  ErrorType = "ErrInvalidCreds"
+	ErrBadRequest    ErrorType = "ErrBadRequest"
 )
