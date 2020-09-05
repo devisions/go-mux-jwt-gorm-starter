@@ -17,7 +17,8 @@ func NewApiRestRouter(userSvc users.UserService) *mux.Router {
 
 	// setup the routes
 	var ApiRestRouteSets []routes.ApiRestRouteSet
-	ApiRestRouteSets = append(ApiRestRouteSets, users.UsersApiRestRoutes)
+
+	ApiRestRouteSets = append(ApiRestRouteSets, users.ApiRestRouteSet)
 
 	for _, routeSet := range ApiRestRouteSets {
 		subRouter := router.PathPrefix(routeSet.Prefix).Subrouter()

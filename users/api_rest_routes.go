@@ -6,7 +6,7 @@ import (
 	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/routes"
 )
 
-var UsersApiRestRoutes = routes.ApiRestRouteSet{
+var ApiRestRouteSet = routes.ApiRestRouteSet{
 	Prefix: "/users",
 	SubRoutes: []routes.ApiRestRoute{
 		{
