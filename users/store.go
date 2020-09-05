@@ -17,7 +17,7 @@ type UserStore interface {
 	GetByID(int uint) (*User, error)
 	GetByEmail(email string) (*User, error)
 
-	// Create(user *User) error
+	Create(user *User) error
 	// Update(user *User) error
 	// Delete(id uint) error
 
@@ -25,12 +25,16 @@ type UserStore interface {
 	Close()
 
 	// AutoMigrate is a helper method used for database migration
-	AutoMigrate() error
+	Migrate() error
 }
 
 // An implementation of `UserStore` interface, used internally.
 type userStoreGorm struct {
 	db *gorm.DB
+}
+
+func NewUserStore(dbConnInfo string) (UserStore, error) {
+	return newUserStoreGorm(dbConnInfo)
 }
 
 // Internal constructor of a userStoreGorm instance.
@@ -49,8 +53,13 @@ func newUserStoreGorm(dbConnInfo string) (*userStoreGorm, error) {
 	return &userStoreGorm{db}, nil
 }
 
-func (us *userStoreGorm) GetByID(int uint) (*User, error) {
-	return nil, nil
+func (us *userStoreGorm) GetByID(id uint) (*User, error) {
+	var user User
+	tx := us.db.Where("id = ?", id)
+	if err := tx.First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
 
 func (us *userStoreGorm) GetByEmail(email string) (*User, error) {
@@ -61,6 +70,11 @@ func (us *userStoreGorm) Close() {
 
 }
 
-func (us *userStoreGorm) AutoMigrate() error {
-	return nil
+func (us *userStoreGorm) Create(user *User) error {
+	return us.db.Create(user).Error
+}
+
+func (us *userStoreGorm) Migrate() error {
+	log.Println("Running database migration now.")
+	return us.db.AutoMigrate(&User{})
 }
