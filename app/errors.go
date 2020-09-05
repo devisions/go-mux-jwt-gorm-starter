@@ -1,5 +1,7 @@
 package app
 
+import "errors"
+
 type Error struct {
 	Code    string
 	Message string
@@ -7,28 +9,26 @@ type Error struct {
 
 type ErrorType string
 
-type Errors struct {
-	catalog map[ErrorType]Error
+func (et ErrorType) AsError() error {
+	return errors.New(string(et))
 }
-
-// AppErrors is a catalog of application wide errors.
-var errors Errors = InitErrors()
 
 func GetError(errorType ErrorType) Error {
-	return errors.catalog[errorType]
+	return appErrors[errorType]
 }
 
-func InitErrors() Errors {
-	catalog := map[ErrorType]Error{
-		InternalError:      {"E001", "An internal error occurred."},
-		UnauthorizedError:  {"E002", "Unauthorized access."},
-		JWTValidationError: {"E003", "JWT validation error."},
-	}
-	return Errors{catalog}
+var appErrors map[ErrorType]Error = map[ErrorType]Error{
+	ErrInternal:      {"E001", "An internal error occurred."},
+	ErrUnauthorized:  {"E002", "Unauthorized access."},
+	ErrJWTValidation: {"E003", "JWT validation error."},
+	ErrNotFound:      {"E004", "Not found."},
+	ErrInvalidCreds:  {"E005", "Invalid credentials."},
 }
 
 const (
-	InternalError      ErrorType = "InternalError"
-	UnauthorizedError  ErrorType = "UnauthorizedError"
-	JWTValidationError ErrorType = "JWTValidationError"
+	ErrInternal      ErrorType = "ErrInternal"
+	ErrUnauthorized  ErrorType = "ErrUnauthorized"
+	ErrJWTValidation ErrorType = "ErrJWTValidation"
+	ErrNotFound      ErrorType = "ErrNotFound"
+	ErrInvalidCreds  ErrorType = "ErrInvalidCreds"
 )

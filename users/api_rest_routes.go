@@ -24,7 +24,7 @@ var ApiRestRouteSet = routes.ApiRestRouteSet{
 			Protected:   true,
 		},
 		{
-			Name:        "CreateUser",
+			Name:        "Register User",
 			Method:      http.MethodPost,
 			Pattern:     "",
 			HandlerFunc: RegisterHandler,
@@ -47,8 +47,8 @@ var ApiRestRouteSet = routes.ApiRestRouteSet{
 		{
 			Name:        "Login User",
 			Method:      http.MethodPost,
-			Pattern:     "",
-			HandlerFunc: AuthenticateHandler,
+			Pattern:     "/login",
+			HandlerFunc: LoginHandler,
 			Protected:   false,
 		},
 	},

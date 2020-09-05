@@ -3,6 +3,7 @@ package users
 import (
 	"log"
 
+	"github.com/devisions/go-mux-jwt-gorm-starter/app/helpers"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -55,19 +56,24 @@ func newUserStoreGorm(dbConnInfo string) (*userStoreGorm, error) {
 
 func (us *userStoreGorm) GetByID(id uint) (*User, error) {
 	var user User
-	tx := us.db.Where("id = ?", id)
-	if err := tx.First(&user).Error; err != nil {
+	db := us.db.Where("id = ?", id)
+	if err := helpers.FirstRecord(db, &user); err != nil {
 		return nil, err
 	}
 	return &user, nil
 }
 
 func (us *userStoreGorm) GetByEmail(email string) (*User, error) {
-	return nil, nil
+	var user User
+	db := us.db.Where("email = ?", email)
+	if err := helpers.FirstRecord(db, &user); err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
 
 func (us *userStoreGorm) Close() {
-
+	// TODO: is there a .Close() in GORM v2?
 }
 
 func (us *userStoreGorm) Create(user *User) error {

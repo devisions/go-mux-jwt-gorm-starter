@@ -32,11 +32,11 @@ func newErrorResponse(errorType app.ErrorType, reason string) ErrorResponse {
 // === Common responses ===
 
 func RespondJsonWithInternalServerError(w http.ResponseWriter) {
-	RespondJsonWithErrorReason(w, http.StatusInternalServerError, app.InternalError, "")
+	RespondJsonWithErrorReason(w, http.StatusInternalServerError, app.ErrInternal, "")
 }
 
 func RespondJsonWithUnauthorizedError(w http.ResponseWriter) {
-	RespondJsonWithErrorReason(w, http.StatusUnauthorized, app.UnauthorizedError, "")
+	RespondJsonWithErrorReason(w, http.StatusUnauthorized, app.ErrUnauthorized, "")
 }
 
 // === Generic responses ===

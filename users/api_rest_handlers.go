@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/devisions/go-mux-jwt-gorm-starter/api/helpers"
 	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/responses"
+	"github.com/devisions/go-mux-jwt-gorm-starter/app/helpers"
 )
 
 // UserService instance used internally (within)
@@ -16,9 +16,13 @@ func InitApiRestHandlers(svc UserService) {
 	userSvc = svc
 }
 
-// SignupForm is submited when user does Signup.
 type SignupForm struct {
 	Name     string `schema:"name"`
+	Email    string `schema:"email"`
+	Password string `schema:"password"`
+}
+
+type LoginForm struct {
 	Email    string `schema:"email"`
 	Password string `schema:"password"`
 }
@@ -61,8 +65,19 @@ func DeleteHandler(w http.ResponseWriter, r *http.Request) {
 	// ...
 }
 
-func AuthenticateHandler(w http.ResponseWriter, r *http.Request) {
-	// var user User
-	// token, err := service.Login(email, password) ...
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	var form LoginForm
+	if err := helpers.ParseForm(r, &form); err != nil {
+		log.Printf("Error parsing login request body: %s\n", err)
+		responses.RespondJsonWithError(w, http.StatusBadRequest, "Invalid login request")
+		return
+	}
+	token, err := userSvc.Authenticate(form.Email, form.Password)
+	if err != nil {
+		log.Printf("Error at login: %s\n", err)
+		responses.RespondJsonWithInternalServerError(w)
+		return
+	}
+	responses.RespondJson(w, token)
 
 }

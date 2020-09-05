@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/responses"
+	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/tokens"
 	"github.com/devisions/go-mux-jwt-gorm-starter/app"
 	"github.com/dgrijalva/jwt-go"
 )
@@ -18,9 +19,9 @@ func JWTMiddleware(next http.Handler) http.Handler {
 			return
 		}
 		tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
-		claims, err := VerifyToken(tokenString)
+		claims, err := tokens.VerifyToken(tokenString)
 		if err != nil {
-			responses.RespondJsonWithErrorReason(w, http.StatusUnauthorized, app.JWTValidationError, err.Error())
+			responses.RespondJsonWithErrorReason(w, http.StatusUnauthorized, app.ErrJWTValidation, err.Error())
 			return
 		}
 		userId := fmt.Sprintf("%v", claims.(jwt.MapClaims)["user_id"])
