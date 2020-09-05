@@ -31,16 +31,20 @@ func newErrorResponse(errorType app.ErrorType, reason string) ErrorResponse {
 
 // === Common responses ===
 
+func RespondErrBadRequest(w http.ResponseWriter) {
+	RespondJsonWithErrorReason(w, http.StatusBadRequest, app.ErrEmpty, "")
+}
+
+func RespondErrNotFound(w http.ResponseWriter) {
+	RespondJsonWithErrorReason(w, http.StatusNotFound, app.ErrEmpty, "")
+}
+
 func RespondJsonWithInternalServerError(w http.ResponseWriter) {
 	RespondJsonWithErrorReason(w, http.StatusInternalServerError, app.ErrInternal, "")
 }
 
 func RespondJsonWithUnauthorizedError(w http.ResponseWriter) {
 	RespondJsonWithErrorReason(w, http.StatusUnauthorized, app.ErrUnauthorized, "")
-}
-
-func RespondErrBadRequest(w http.ResponseWriter) {
-	RespondJsonWithErrorReason(w, http.StatusBadRequest, app.ErrEmpty, "")
 }
 
 func RespondJsonWithErrBadRequest(w http.ResponseWriter) {

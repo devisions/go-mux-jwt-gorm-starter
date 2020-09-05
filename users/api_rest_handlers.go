@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/responses"
+	"github.com/devisions/go-mux-jwt-gorm-starter/app"
 	"github.com/devisions/go-mux-jwt-gorm-starter/app/helpers"
 	"github.com/gorilla/mux"
 )
@@ -44,6 +45,10 @@ func ShowOneHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	user, err := userSvc.GetByID(uint(id))
 	if err != nil {
+		if err.Error() == string(app.ErrNotFound) {
+			responses.RespondErrNotFound(w)
+			return
+		}
 		responses.RespondJsonWithErrInternalAndReason(w, err.Error())
 		return
 	}
