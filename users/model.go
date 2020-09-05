@@ -11,11 +11,6 @@ type User struct {
 	Hash  string `json:"-"` // skipped on json marshalling
 }
 
-func (u User) HashPassword(password string) string {
-	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), 4)
-	return string(bytes)
-}
-
 func (u User) checkPassword(password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(u.Hash), []byte(password))
 	return err == nil

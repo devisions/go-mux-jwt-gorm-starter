@@ -2,9 +2,10 @@ package responses
 
 import (
 	"encoding/json"
-	"github.com/devisions/go-mux-jwt-gorm-starter/app"
 	"log"
 	"net/http"
+
+	"github.com/devisions/go-mux-jwt-gorm-starter/app"
 )
 
 type ErrorContent struct {
@@ -28,14 +29,26 @@ func newErrorResponse(errorType app.ErrorType, reason string) ErrorResponse {
 	}
 }
 
-// RespondWithError responds with the provided statusCode and error in the body.
-func RespondWithError(w http.ResponseWriter, statusCode int, errorType app.ErrorType) {
-	RespondWithErrorReason(w, statusCode, errorType, "")
+// === Common responses ===
+
+func RespondJsonWithInternalServerError(w http.ResponseWriter) {
+	RespondJsonWithErrorReason(w, http.StatusInternalServerError, app.InternalError, "")
 }
 
-// RespondWithErrorReason responds with the provided statusCode and error in the body,
+func RespondJsonWithUnauthorizedError(w http.ResponseWriter) {
+	RespondJsonWithErrorReason(w, http.StatusUnauthorized, app.UnauthorizedError, "")
+}
+
+// === Generic responses ===
+
+// RespondJsonWithError responds with the provided statusCode and error in the body.
+func RespondJsonWithError(w http.ResponseWriter, statusCode int, errorType app.ErrorType) {
+	RespondJsonWithErrorReason(w, statusCode, errorType, "")
+}
+
+// RespondJsonWithErrorReason responds with the provided statusCode and error in the body,
 // including the reason, as further details.
-func RespondWithErrorReason(w http.ResponseWriter, statusCode int, errorType app.ErrorType, reason string) {
+func RespondJsonWithErrorReason(w http.ResponseWriter, statusCode int, errorType app.ErrorType, reason string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	err := json.NewEncoder(w).Encode(newErrorResponse(errorType, reason))
@@ -44,8 +57,8 @@ func RespondWithErrorReason(w http.ResponseWriter, statusCode int, errorType app
 	}
 }
 
-// RespondAsJson responds with OK status code and JSON as body and content type.
-func RespondAsJson(w http.ResponseWriter, body interface{}) {
+// RespondJson responds with OK status code and JSON as body and content type.
+func RespondJson(w http.ResponseWriter, body interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(body)
 }

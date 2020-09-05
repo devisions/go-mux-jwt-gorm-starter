@@ -40,13 +40,14 @@ func main() {
 		}
 	}
 	defer userStore.Close()
-	//userSvc, err := users.NewUserService(userStore)
+	userSvc := users.NewUserService(userStore)
 
 	port, isSet := os.LookupEnv("PORT")
 	if !isSet {
 		port = "8000" // default value, if not set at env level
 	}
-	router := rest.NewApiRestRouter()
+
+	router := rest.NewApiRestRouter(userSvc)
 
 	// Start the HTTP Server.
 	log.Printf("Starting HTTP Server listening on :%s ...\n", port)
