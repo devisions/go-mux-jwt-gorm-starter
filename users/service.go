@@ -76,5 +76,7 @@ func generateJWT(user User) (*tokens.JWTToken, error) {
 	if err != nil {
 		log.Printf("Error while generating jwt: %s\n", err)
 	}
-	return &tokens.JWTToken{tokenString}, err
+	return &tokens.JWTToken{
+		Token: tokenString,
+	}, err
 }

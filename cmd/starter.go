@@ -32,6 +32,8 @@ func main() {
 		log.Fatalf("Failed to init the user store: %s\n", err)
 		return
 	}
+	defer userStore.Close()
+
 	if dbMigrate {
 		err := userStore.Migrate()
 		if err != nil {
@@ -39,15 +41,17 @@ func main() {
 			return
 		}
 	}
-	defer userStore.Close()
+
 	userSvc := users.NewUserService(userStore)
+
+	userRestApi := users.NewRestApi(userSvc)
 
 	port, isSet := os.LookupEnv("PORT")
 	if !isSet {
 		port = "8000" // default value, if not set at env level
 	}
 
-	router := rest.NewApiRestRouter(userSvc)
+	router := rest.NewRestApiRouter(userRestApi)
 
 	// Start the HTTP Server.
 	log.Printf("Starting HTTP Server listening on :%s ...\n", port)

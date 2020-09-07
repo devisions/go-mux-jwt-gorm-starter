@@ -6,17 +6,23 @@ import (
 	"strconv"
 
 	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/responses"
+	"github.com/devisions/go-mux-jwt-gorm-starter/api/rest/routes"
 	"github.com/devisions/go-mux-jwt-gorm-starter/app"
 	"github.com/devisions/go-mux-jwt-gorm-starter/app/helpers"
 	"github.com/gorilla/mux"
 )
 
-// UserService instance used internally (within)
-var userSvc UserService
+type RestApi struct {
+	Routes  routes.ApiRestRouteSet
+	userSvc UserService
+}
 
-// InitApiRestHandlers does the initialization required for API REST Handlers to work correctly.
-func InitApiRestHandlers(svc UserService) {
-	userSvc = svc
+func NewRestApi(userSvc UserService) RestApi {
+	restapi := RestApi{
+		userSvc: userSvc,
+	}
+	restapi.setupRestApiRoutes()
+	return restapi
 }
 
 type SignupForm struct {
@@ -30,20 +36,20 @@ type LoginForm struct {
 	Password string `schema:"password"`
 }
 
-func ShowAllHandler(w http.ResponseWriter, r *http.Request) {
+func (h *RestApi) ShowAllHandler(w http.ResponseWriter, r *http.Request) {
 	var users []User
 	// TODO
 	responses.RespondJson(w, users)
 }
 
-func ShowOneHandler(w http.ResponseWriter, r *http.Request) {
+func (h *RestApi) showOne(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.ParseUint(params["id"], 10, 64)
 	if err != nil {
 		responses.RespondErrBadRequest(w)
 		return
 	}
-	user, err := userSvc.GetByID(uint(id))
+	user, err := h.userSvc.GetByID(uint(id))
 	if err != nil {
 		if err.Error() == string(app.ErrNotFound) {
 			responses.RespondErrNotFound(w)
@@ -55,14 +61,14 @@ func ShowOneHandler(w http.ResponseWriter, r *http.Request) {
 	responses.RespondJson(w, user)
 }
 
-func RegisterHandler(w http.ResponseWriter, r *http.Request) {
+func (h *RestApi) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	var form SignupForm
 	if err := helpers.ParseForm(r, &form); err != nil {
 		log.Printf("Error parsing signup request body: %s\n", err)
 		responses.RespondJsonWithError(w, http.StatusBadRequest, "Invalid signup request")
 		return
 	}
-	user, err := userSvc.Register(form.Name, form.Email, form.Password)
+	user, err := h.userSvc.Register(form.Name, form.Email, form.Password)
 	if err != nil {
 		responses.RespondJsonWithInternalServerError(w)
 		return
@@ -70,24 +76,24 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	responses.RespondJson(w, user)
 }
 
-func UpdateHandler(w http.ResponseWriter, r *http.Request) {
+func (h *RestApi) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 	// params := mux.Vars(r)
 	// ...
 }
 
-func DeleteHandler(w http.ResponseWriter, r *http.Request) {
+func (h *RestApi) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 	// params := mux.Vars(r)
 	// ...
 }
 
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
+func (h *RestApi) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var form LoginForm
 	if err := helpers.ParseForm(r, &form); err != nil {
 		log.Printf("Error parsing login request body: %s\n", err)
 		responses.RespondJsonWithError(w, http.StatusBadRequest, "Invalid login request")
 		return
 	}
-	token, err := userSvc.Authenticate(form.Email, form.Password)
+	token, err := h.userSvc.Authenticate(form.Email, form.Password)
 	if err != nil {
 		log.Printf("Error at login: %s\n", err)
 		responses.RespondJsonWithInternalServerError(w)

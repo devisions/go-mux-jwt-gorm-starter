@@ -9,16 +9,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func NewApiRestRouter(userSvc users.UserService) *mux.Router {
-
-	users.InitApiRestHandlers(userSvc)
+func NewRestApiRouter(usersRestApi users.RestApi) *mux.Router {
 
 	router := mux.NewRouter()
 
 	// setup the routes
 	var ApiRestRouteSets []routes.ApiRestRouteSet
 
-	ApiRestRouteSets = append(ApiRestRouteSets, users.ApiRestRouteSet)
+	ApiRestRouteSets = append(ApiRestRouteSets, usersRestApi.Routes)
 
 	for _, routeSet := range ApiRestRouteSets {
 		subRouter := router.PathPrefix(routeSet.Prefix).Subrouter()
